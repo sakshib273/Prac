@@ -1,0 +1,32 @@
+write.csv(data, "employee_salary.csv", row.names = FALSE)
+data <- read.csv("employee_salary.csv")
+
+# Convert gender to factor
+data$gender <- as.factor(data$gender)
+
+# Check dummy creation
+contrasts(data$gender)
+
+# Fit model with dummy variable
+model <- lm(salary ~ experience + gender, data = data)
+summary(model)
+
+library(ggplot2)
+
+ggplot(data, aes(x=experience, y=salary, color=gender)) +
+  geom_point(size=3) +
+  geom_smooth(method="lm", se=FALSE) +
+  labs(title="Salary vs Experience by Gender")
+
+"""
+Dummy variables allow categorical predictors to be used in regression
+
+Interpretation depends on reference category
+
+In this example:
+
+Gender = Female → salary is 2k lower than Male at same experience
+
+Experience → each year increases salary by 1.5k
+
+"""
