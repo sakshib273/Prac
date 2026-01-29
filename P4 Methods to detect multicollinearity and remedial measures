@@ -1,0 +1,43 @@
+data <- read.csv("C:/Users/Hp/Downloads/agriculture.csv", header = TRUE)
+data
+
+model <- lm(yield ~ rainfall + fertilizer + irrigation, data = data)
+summary(model)
+
+cor(data[, c("rainfall", "fertilizer", "irrigation")])
+
+install.packages("car")   # run once
+library(car)
+
+vif(model)
+
+1 / vif(model)
+
+install.packages("olsrr")   # run once
+library(olsrr)
+
+ols_coll_diag(model)
+
+model_reduced <- lm(yield ~ rainfall + fertilizer, data = data)
+summary(model_reduced)
+
+data$input_index <- (data$fertilizer + data$irrigation) / 2
+
+model_index <- lm(yield ~ rainfall + input_index, data = data)
+summary(model_index)
+
+
+data$rainfall_c <- scale(data$rainfall, center = TRUE, scale = FALSE)
+data$fertilizer_c <- scale(data$fertilizer, center = TRUE, scale = FALSE)
+
+model_centered <- lm(yield ~ rainfall_c + fertilizer_c + irrigation, data = data)
+summary(model_centered)
+
+
+install.packages("glmnet")   # run once
+library(glmnet)
+
+x <- model.matrix(yield ~ rainfall + fertilizer + irrigation, data)[, -1]
+y <- data$yield
+
+ridge_model <- glmnet(x, y, alpha = 0)
