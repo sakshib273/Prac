@@ -1,0 +1,90 @@
+Practical 2
+Aim : Multivariate Regression Model
+
+#Step 1:Importing Data
+
+install.packages("MASS")
+library(readxl)
+mammal<- read_excel("D:/Anup Dhamane/Sem 3/Econometric & Finance/mammalsize.xlsx")
+
+#View Dataset in table format
+View(mammal)
+
+#Check the column names
+names(mammal)
+
+#Step 2: Deciding variables under the study
+
+y2 = mammal$"Body_Weight_kg"
+x21 = mammal$"Brain_Weight_g"
+x22 = mammal$"Body weight (kg)"
+x23 = mammal$"Av. Litter size"
+
+
+#Fittng the model
+ model2 = lm(y2~x21+x22+x23)
+model2
+
+#Summary
+summary(model2)
+
+#Step 4 : Checking the assumptions of the model through the diagnostic plot
+plot(model2)
+
+
+
+*******same code as above for all multivariate regression model******* belwo is additional to remove the outliers from the data
+#pt 72 is outlier
+mammal.1 = mammal[-c(72)]
+
+# Rebuilting model after removing outlier
+
+ y2.1 = mammal.1$"gestation period(days)"
+x21.1 = mammal$"Brain_Weight_g"
+x22.2 = mammal$"Body weight (kg)"
+x23.3 = mammal$"Av. Litter size"
+
+model2.1 = lm(y2.1~x21.1+x22.1+x23.1)
+model2.1
+
+plot(model2.1)
+
+#Pt 77th is an outlier
+mammal.2 = mammal[-c(77)]
+
+# Rebuilting model after removing outlier
+
+ y2.2 = mammal.1$"gestation period(days)"
+x21.2 = mammal$"Brain_Weight_g"
+x22.2 = mammal$"Body weight (kg)"
+x23.2 = mammal$"Av. Litter size"
+
+model2.2 = lm(y2.2~x21.2+x22.2+x23.2)
+model2.2
+
+summary(model2.2)
+plot(model2.2)
+
+#check for heteroscedasticity using Breusch Pagan Test
+
+library(lmtest)
+bptest(model2.2)
+
+# The assumption of normality is not satisfied.Thus, we use log transformation
+
+y2new = log(y2.2)
+
+#Fitting of new model
+model2.3 = lm(y2new~x21.2+x22.2+x23.2)
+model2.3
+
+summary(model2.3)
+plot(model2.3)
+
+#Check heteroscedasticity using Breusch Pagan Test
+
+library(lmtest)
+bptest(model2.3)
+
+#Check for normality using Shapiro-Wilk Test
+shapiro.test(y2new)
