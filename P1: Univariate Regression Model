@@ -1,0 +1,57 @@
+library(readxl)
+bird<-read_excel("C:/Users/Hp/Downloads/birdextinct.xlsx")
+
+#View Dataset in table format
+View(bird)
+
+#Check the column names
+names(bird)
+
+y = bird$"Area (km. sq.)"
+x1 = bird$"Species at Risk"
+x2 = bird$"Species Extinct"
+
+x = x2/x1
+
+#Fittng the model
+model = lm(y~x)
+model
+
+#Step 4 : Checking the assumptions of the model through the diagnostic plot
+plot(model)
+
+par(mfrow = c(2, 2))
+plot(model)
+
+# Statistical model for testing assumptions of a linear regression model
+#Shapiro-Wilk Test
+shapiro.test(y)
+
+#Bresuch-Pagan Test 
+install.packages("lmtest")
+library(lmtest)
+
+bptest(model)
+
+#Summary of the model
+summary(model)
+
+# To achieve normaity, we make log transformationto response vairable(i.e.transfored to log(y)) and new model in obtained
+
+y1 = log(y)
+model1.1 = lm(y1~x)
+model1.1
+
+# Checking the assumptions of the model through the diagnostic plot
+y1 = log(y)
+model1.1 = lm(y1~x)
+model1.1
+
+#Shapiro-Wilk Test
+shapiro.test(y1)
+
+#Bresuch-Pagan Test
+bptest(model1.1)
+
+#Summary of model1.1
+summary(model1.1)
