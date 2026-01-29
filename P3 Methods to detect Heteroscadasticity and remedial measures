@@ -1,0 +1,38 @@
+data <- read.csv("C:/Users/Hp/Downloads/biodiversity.csv", header = TRUE)
+str(data)
+summary(data)
+head(data)
+
+model <- lm(species_risk ~ area, data = data)
+summary(model)
+
+plot(model, which = 1)
+
+plot(model, which = 3)
+
+install.packages("lmtest")   # run once
+library(lmtest)
+
+bptest(model)
+
+model_log <- lm(log(species_risk) ~ area, data = data)
+summary(model_log)
+
+plot(model_log, which = 1)
+plot(model_log, which = 3)
+bptest(model_log)
+
+model_sqrt <- lm(sqrt(species_risk) ~ area, data = data)
+summary(model_sqrt)
+
+weights <- 1 / area
+model_wls <- lm(species_risk ~ area, data = data, weights = weights)
+summary(model_wls)
+
+
+install.packages("sandwich")   # run once
+library(sandwich)
+
+coeftest(model, vcov = vcovHC(model, type = "HC1"))
+
+
